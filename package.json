@@ -23,5 +23,8 @@
     "rollup": "^2.70.0",
     "rollup-plugin-dts": "^4.2.0",
     "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "mascaration": "^0.0.3"
   }
 }
