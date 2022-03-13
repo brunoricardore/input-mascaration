@@ -2456,9 +2456,89 @@ if (process.env.NODE_ENV === 'production') {
 
 var React = react.exports;
 
-const Input = (props) => {
-    return (React.createElement("input", null));
+var dist = {};
+
+Object.defineProperty(dist, "__esModule", { value: true });
+dist.unmask = formatter_1 = dist.formatter = void 0;
+/**
+ *
+ * @param mask The mask to format the value: '###.###.###-##', if you give an array of masks, it found the best match by the mask size (including only maskChar), and use it to mask
+ * @param value Value you'd like to mask
+ * @param maskChar change the replacer char, instead of '#'
+ * @param placeholderChar you can define an placeholder char to empty slots: '###.###.___-__'
+ * @returns string
+ */
+function formatter(mask, value, maskChar, placeholderChar) {
+    if (maskChar === void 0) { maskChar = '#'; }
+    if (!value || !mask)
+        return '';
+    var splitted_value = value.split('');
+    var finalMask = '';
+    var regex = new RegExp("[^".concat(maskChar, "]"), 'g');
+    if (Array.isArray(mask)) {
+        var bestMask = mask
+            .map(function (m) {
+            var onlyMaskChars = m.replace(regex, '');
+            return {
+                mask: m,
+                clearedMask: onlyMaskChars,
+                length: onlyMaskChars.length
+            };
+        }).sort(function (a, b) { return Math.abs(a.length - splitted_value.length) - Math.abs(b.length - splitted_value.length); });
+        finalMask = bestMask[0].mask;
+    }
+    else {
+        finalMask = mask.toString();
+    }
+    var formatted = [];
+    var splitted_mask = finalMask.split('');
+    var skipLength = 0;
+    for (var index = 0; index < splitted_mask.length; index++) {
+        if (splitted_mask[index] !== '#') {
+            formatted[index] = splitted_mask[index];
+            skipLength++;
+            continue;
+        }
+        formatted[index] = splitted_value[index - skipLength] ? splitted_value[index - skipLength] : placeholderChar || splitted_mask[index];
+    }
+    return formatted.join('');
+}
+var formatter_1 = dist.formatter = formatter;
+/**
+ *
+ * @param maskedValue the masked value ''123.123.123.11'
+ * @returns string 12312312311
+ */
+function unmask(maskedValue) {
+    return maskedValue.replace(/[\D]/, '');
+}
+dist.unmask = unmask;
+
+const InputMask = (props) => {
+    const [state, setState] = react.exports.useState();
+    const inputRef = react.exports.useRef(null);
+    react.exports.useEffect(() => {
+        setState(formatter_1(props.mask, props.value));
+    }, []);
+    react.exports.useEffect(() => {
+        const pos = state === null || state === void 0 ? void 0 : state.replace(/\D/g, '').length;
+        inputRef.current.setSelectionRange(pos, pos);
+    }, [state]);
+    const handleChange = (event) => {
+        const eventValue = event.target.value;
+        const replaceRegex = new RegExp(`${props.maskChar || '#'}`, 'g');
+        const rawValue = eventValue.replace(replaceRegex, '');
+        console.log(eventValue, rawValue);
+        let formattedValue = '';
+        if (props.beforeMask) {
+            formattedValue = props.beforeMask(rawValue);
+        }
+        formattedValue = formatter_1(props.mask, rawValue);
+        setState(formattedValue);
+        props.onValueChanged(formattedValue);
+    };
+    return React.createElement("input", { ref: inputRef, value: state, onChange: handleChange });
 };
 
-export { Input };
+export { InputMask };
 //# sourceMappingURL=index.js.map

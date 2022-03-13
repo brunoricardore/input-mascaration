@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Input mask component for React",
   "scripts": {
-    "rl-build": "rollup -c"
+    "build": "rollup -c",
+    "test": "jest --silent=false"
   },
   "keywords": [],
   "author": "Bruno Rebelo Ricardo",
@@ -15,16 +16,27 @@
   ],
   "types": "dist/index.d.ts",
   "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-node-resolve": "^13.1.3",
     "@rollup/plugin-typescript": "^8.3.1",
+    "@testing-library/react": "^12.1.4",
+    "@types/enzyme": "^3.10.11",
+    "@types/jest": "^27.4.1",
     "@types/react": "^17.0.40",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
+    "babel-jest": "^27.5.1",
+    "enzyme": "^3.11.0",
+    "jest": "^27.5.1",
     "react": "^17.0.2",
     "rollup": "^2.70.0",
     "rollup-plugin-dts": "^4.2.0",
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "mascaration": "^0.0.3"
+    "mascaration": "^0.0.5"
   }
 }
